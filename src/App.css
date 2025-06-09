@@ -1,3 +1,52 @@
+:root {
+  --accent-color: #228B22; /* default fallback */
+  --background-color: #f9f9f9;
+  --text-color: #111111;
+}
+
+body {
+  background-color: var(--background-color);
+  color: var(--text-color);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+body.light {
+  --background-color: #f9f9f9;
+  --text-color: #111111;
+}
+
+body.dark {
+  --background-color: #111111;
+  --text-color: #f9f9f9;
+}
+
+import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
+import Dashboard from './pages/Dashboard';
+import Profile from './pages/Profile';
+import WorkoutGenerator from './pages/WorkoutGenerator';
+
+function App() {
+  return (
+    <Router>
+      <nav style={{ padding: '1rem', borderBottom: '1px solid #ccc' }}>
+        <Link to="/" style={{ marginRight: '1rem' }}>Dashboard</Link>
+        <Link to="/profile" style={{ marginRight: '1rem' }}>Profile</Link>
+        {/* Workout Generator link */}
+        <Link to="/workout-generator" style={{ marginRight: '1rem' }}>Workout Generator</Link>
+      </nav>
+
+      <Routes>
+        <Route path="/" element={<Dashboard />} />
+        <Route path="/profile" element={<Profile />} />
+        {/* Workout Generator route */}
+        <Route path="/workout-generator" element={<WorkoutGenerator />} />
+      </Routes>
+    </Router>
+  );
+}
+
+export default App;
+
 #root {
   max-width: 1280px;
   margin: 0 auto;

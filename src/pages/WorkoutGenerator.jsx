@@ -80,100 +80,104 @@ const WorkoutGenerator = () => {
   return (
     <div className="p-6 bg-white dark:bg-gray-900 text-black dark:text-white rounded-lg shadow space-y-6">
       <Toaster position="top-center" />
-      <h2 className="text-2xl font-bold mb-4">🏋️‍♂️ Workout Plan Generator</h2>
+      <h2 className="text-2xl font-bold">🏋️‍♂️ Workout Plan Generator</h2>
 
-      {/* Line 1 */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div>
-          <label>Goal:</label>
-          <select
-            value={goal}
-            onChange={(e) => setGoal(e.target.value)}
-            className="w-full p-2 border rounded"
-            style={{ borderColor: 'var(--accent-color)', color: 'var(--accent-color)' }}
-          >
-            <option value="">Select Goal</option>
-            <option value="weight_loss">Weight Loss</option>
-            <option value="muscle_gain">Muscle Gain</option>
-            <option value="flexibility">Flexibility</option>
-            <option value="performance">Performance</option>
-          </select>
+      {/* Grid Rows */}
+      <div className="grid grid-rows-3 gap-y-4">
+        
+        {/* Row 1 */}
+        <div className="flex flex-wrap gap-4 bg-gray-50 dark:bg-gray-800 p-4 rounded-lg shadow">
+          <div className="flex-1 min-w-[200px]">
+            <label>Goal:</label>
+            <select
+              value={goal}
+              onChange={(e) => setGoal(e.target.value)}
+              className="w-full p-2 border rounded"
+              style={{ borderColor: 'var(--accent-color)', color: 'var(--accent-color)' }}
+            >
+              <option value="">Select Goal</option>
+              <option value="weight_loss">Weight Loss</option>
+              <option value="muscle_gain">Muscle Gain</option>
+              <option value="flexibility">Flexibility</option>
+              <option value="performance">Performance</option>
+            </select>
+          </div>
+
+          <div className="flex-1 min-w-[200px]">
+            <label>Energy Level: {energyLevel} {energyEmojis[energyLevel - 1]}</label>
+            <input
+              type="range"
+              min="1"
+              max="10"
+              value={energyLevel}
+              onChange={(e) => setEnergyLevel(Number(e.target.value))}
+              className="w-full"
+              style={{ accentColor: 'var(--accent-color)' }}
+            />
+          </div>
+
+          <div className="flex-1 min-w-[200px]">
+            <label>Workout Days Per Week:</label>
+            <input
+              type="number"
+              value={daysPerWeek}
+              onChange={(e) => setDaysPerWeek(Number(e.target.value))}
+              className="w-full p-2 border rounded"
+              style={{ borderColor: 'var(--accent-color)', color: 'var(--accent-color)' }}
+            />
+          </div>
         </div>
 
-        <div>
-          <label>Energy Level: {energyLevel} {energyEmojis[energyLevel - 1]}</label>
-          <input
-            type="range"
-            min="1"
-            max="10"
-            value={energyLevel}
-            onChange={(e) => setEnergyLevel(Number(e.target.value))}
-            className="w-full"
-            style={{ accentColor: 'var(--accent-color)' }}
-          />
+        {/* Row 2 */}
+        <div className="flex flex-wrap gap-4 bg-gray-50 dark:bg-gray-800 p-4 rounded-lg shadow">
+          <div className="flex-1 min-w-[250px]">
+            <label>Upload Equipment Photo (optional):</label>
+            <input type="file" accept="image/*" onChange={handlePhotoUpload} className="w-full p-2 rounded" />
+          </div>
+
+          <div className="flex-1 min-w-[250px]">
+            <label>Workout Equipment:</label>
+            <select
+              value={equipment}
+              onChange={(e) => setEquipment(e.target.value)}
+              className="w-full p-2 border rounded"
+              style={{ borderColor: 'var(--accent-color)', color: 'var(--accent-color)' }}
+            >
+              <option value="">Select Equipment</option>
+              {EQUIPMENT_OPTIONS.map((eq) => (
+                <option key={eq} value={eq}>{eq}</option>
+              ))}
+            </select>
+          </div>
         </div>
 
-        <div>
-          <label>Workout Days Per Week:</label>
-          <input
-            type="number"
-            value={daysPerWeek}
-            onChange={(e) => setDaysPerWeek(Number(e.target.value))}
-            className="w-full p-2 border rounded"
-            style={{ borderColor: 'var(--accent-color)', color: 'var(--accent-color)' }}
-          />
-        </div>
-      </div>
+        {/* Row 3 */}
+        <div className="flex flex-wrap gap-4 bg-gray-50 dark:bg-gray-800 p-4 rounded-lg shadow">
+          <div className="flex-1 min-w-[250px]">
+            <label>Injuries / Restrictions:</label>
+            <select
+              value={injuries}
+              onChange={(e) => setInjuries(e.target.value)}
+              className="w-full p-2 border rounded"
+              style={{ borderColor: 'var(--accent-color)', color: 'var(--accent-color)' }}
+            >
+              <option value="">Select Injury</option>
+              {INJURY_OPTIONS.map((inj) => (
+                <option key={inj} value={inj}>{inj}</option>
+              ))}
+            </select>
+          </div>
 
-      {/* Line 2 */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div>
-          <label>Upload Equipment Photo (optional):</label>
-          <input type="file" accept="image/*" onChange={handlePhotoUpload} className="w-full p-2 rounded" />
-        </div>
-
-        <div>
-          <label>Workout Equipment:</label>
-          <select
-            value={equipment}
-            onChange={(e) => setEquipment(e.target.value)}
-            className="w-full p-2 border rounded"
-            style={{ borderColor: 'var(--accent-color)', color: 'var(--accent-color)' }}
-          >
-            <option value="">Select Equipment</option>
-            {EQUIPMENT_OPTIONS.map((eq) => (
-              <option key={eq} value={eq}>{eq}</option>
-            ))}
-          </select>
-        </div>
-      </div>
-
-      {/* Line 3 */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div>
-          <label>Injuries / Restrictions:</label>
-          <select
-            value={injuries}
-            onChange={(e) => setInjuries(e.target.value)}
-            className="w-full p-2 border rounded"
-            style={{ borderColor: 'var(--accent-color)', color: 'var(--accent-color)' }}
-          >
-            <option value="">Select Injury</option>
-            {INJURY_OPTIONS.map((inj) => (
-              <option key={inj} value={inj}>{inj}</option>
-            ))}
-          </select>
-        </div>
-
-        <div>
-          <label>Additional Notes (optional):</label>
-          <input
-            type="text"
-            value={injuryNote}
-            onChange={(e) => setInjuryNote(e.target.value)}
-            className="w-full p-2 border rounded"
-            style={{ borderColor: 'var(--accent-color)', color: 'var(--accent-color)' }}
-          />
+          <div className="flex-1 min-w-[250px]">
+            <label>Additional Notes (optional):</label>
+            <input
+              type="text"
+              value={injuryNote}
+              onChange={(e) => setInjuryNote(e.target.value)}
+              className="w-full p-2 border rounded"
+              style={{ borderColor: 'var(--accent-color)', color: 'var(--accent-color)' }}
+            />
+          </div>
         </div>
       </div>
 
@@ -181,7 +185,7 @@ const WorkoutGenerator = () => {
       <button
         onClick={handleGeneratePlan}
         disabled={loading}
-        className="bg-[var(--accent-color)] text-white px-4 py-2 rounded hover:opacity-90 transition"
+        className="mt-6 bg-[var(--accent-color)] text-white px-4 py-2 rounded hover:opacity-90 transition"
       >
         {loading ? 'Generating...' : 'Generate Plan'}
       </button>

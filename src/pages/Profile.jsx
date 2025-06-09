@@ -37,9 +37,12 @@ const Profile = () => {
   }, []);
 
   const updateTheme = (theme) => {
-    document.documentElement.classList.remove('light', 'dark');
+    document.body.classList.remove('light', 'dark');
     if (theme === 'light' || theme === 'dark') {
-      document.documentElement.classList.add(theme);
+      document.body.classList.add(theme);
+    } else {
+      // system default → remove both classes
+      document.body.classList.remove('light', 'dark');
     }
   };
 
