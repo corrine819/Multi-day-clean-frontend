@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from 'react';
 import WorkoutGenerator from './WorkoutGenerator';
 
@@ -15,53 +14,54 @@ const Dashboard = () => {
   }, []);
 
   return (
-    <div style={{ padding: '2rem', fontFamily: 'Arial, sans-serif' }}>
-      <h1 style={{ fontSize: '2rem', fontWeight: 'bold', marginBottom: '1rem' }}>Dashboard</h1>
+    <div className="min-h-screen bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-white p-6">
+      {/* Banner/Header */}
+      <header className="flex justify-between items-center mb-6">
+        <h1 className="text-3xl font-bold">🏋️‍♀️ Fitness Dashboard</h1>
+        <nav className="space-x-4">
+          <a href="#" className="text-blue-500 hover:underline">Dashboard</a>
+          <a href="#" className="text-blue-500 hover:underline">Profile</a>
+          <a href="#" className="text-blue-500 hover:underline">Workout Generator</a>
+          <a href="#" className="text-blue-500 hover:underline">Nutrition</a>
+        </nav>
+      </header>
 
-      <div
-        style={{
-          display: 'flex',
-          flexWrap: 'wrap',
-          gap: '2rem'
-        }}
-      >
-        {/* Profile Info Section */}
-        <div
-          style={{
-            flex: '1 1 300px',
-            minWidth: '280px',
-            padding: '1rem',
-            border: '1px solid #ddd',
-            borderRadius: '8px',
-            backgroundColor: '#fafafa'
-          }}
-        >
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* Profile Card */}
+        <div className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow">
+          <h2 className="text-xl font-semibold mb-2">👤 User Profile</h2>
           {profile ? (
-            <div>
-              <h2 style={{ fontSize: '1.5rem', marginBottom: '0.5rem' }}>Welcome, {profile.name || 'User'}!</h2>
-              <p><strong>Goal:</strong> {profile.goal || 'N/A'}</p>
-              <p><strong>Birth Date:</strong> {profile.birth_date || 'N/A'}</p>
-              <p><strong>Gender:</strong> {profile.gender || 'N/A'}</p>
-              <p><strong>Theme:</strong> {profile.theme || 'N/A'}</p>
-              <p><strong>Accent Color:</strong> {profile.accent_color || 'N/A'}</p>
-            </div>
+            <ul className="space-y-1">
+              <li><strong>Name:</strong> {profile.name || 'User'}</li>
+              <li><strong>Goal:</strong> {profile.goal || 'N/A'}</li>
+              <li><strong>Birth Date:</strong> {profile.birth_date || 'N/A'}</li>
+              <li><strong>Gender:</strong> {profile.gender || 'N/A'}</li>
+              <li><strong>Theme:</strong> {profile.theme || 'N/A'}</li>
+              <li><strong>Accent Color:</strong> {profile.accent_color || 'N/A'}</li>
+            </ul>
           ) : (
             <p>Loading profile...</p>
           )}
         </div>
 
-        {/* Workout Generator Section */}
-        <div
-          style={{
-            flex: '2 1 600px',
-            minWidth: '300px',
-            padding: '1rem',
-            border: '1px solid #ddd',
-            borderRadius: '8px',
-            backgroundColor: '#fafafa'
-          }}
-        >
+        {/* Workout Generator Panel */}
+        <div className="lg:col-span-2">
           <WorkoutGenerator />
+        </div>
+      </div>
+
+      {/* Additional Sections */}
+      <div className="mt-8 grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* Feedback Placeholder */}
+        <div className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow">
+          <h3 className="text-lg font-semibold mb-2">📝 Daily Feedback</h3>
+          <p className="text-sm text-gray-600 dark:text-gray-300">Coming soon: hydration, recovery, and energy tracking.</p>
+        </div>
+
+        {/* Plan History Placeholder */}
+        <div className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow">
+          <h3 className="text-lg font-semibold mb-2">📅 Plan History</h3>
+          <p className="text-sm text-gray-600 dark:text-gray-300">Coming soon: view and download past plans.</p>
         </div>
       </div>
     </div>
