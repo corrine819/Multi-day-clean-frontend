@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { Toaster, toast } from 'react-hot-toast';
 
 const API_URL = import.meta.env.VITE_API_URL;
 
@@ -9,193 +10,105 @@ const Profile = () => {
     gender: '',
     goal: '',
     theme: '',
-    accent_color: ''
+    accent_color: '',
+    photo_url: ''
   });
-
-  const [loading, setLoading] = useState(false);
-  const [message, setMessage] = useState('');
 
   useEffect(() => {
     fetch(`${API_URL}/get_profile`)
       .then(res => res.json())
-      .then(data => {
-        setProfile({
-          name: data.name || '',
-          birth_date: data.birth_date || '',
-          gender: data.gender || '',
-          goal: data.goal || '',
-          theme: data.theme || '',
-          accent_color: data.accent_color || ''
-        });
-      })
-      .catch(err => console.error('Error fetching profile:', err));
+      .then(data => setProfile(data))
+      .catch(err => console.error('Error loading profile:', err));
   }, []);
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
-    setProfile((prevProfile) => ({
-      ...prevProfile,
-      [name]: value
-    }));
+    setProfile({ ...profile, [e.target.name]: e.target.value });
   };
 
-  const handleAccentColorChange = (color) => {
-    setProfile((prevProfile) => ({
-      ...prevProfile,
-      accent_color: color
-    }));
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    setLoading(true);
-    fetch(`${API_URL}/update_profile`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(profile)
-    })
-      .then(res => res.json())
-      .then(() => {
-        setMessage('Profile updated successfully!');
-        setLoading(false);
-        setTimeout(() => setMessage(''), 3000);
-      })
-      .catch(err => {
-        console.error('Error updating profile:', err);
-        setLoading(false);
+  const handleSave = async () => {
+    try {
+      const response = await fetch(`${API_URL}/update_profile`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(profile)
       });
+      if (!response.ok) throw new Error('Failed to save');
+      toast.success('Profile saved!');
+    } catch (err) {
+      toast.error('Failed to save profile');
+      console.error(err);
+    }
   };
 
-  const accentColors = [
-    'Forest Green',
-    'Plum',
-    'Coral',
-    'Light Blue',
-    'Turquoise',
-    'Tan',
-    'Slate Blue',
-    'Sunset'
-  ];
+  const handlePhotoUpload = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    const formData = new FormData();
+    formData.append('image', file);
+
+    try {
+      const res = await fetch(`${API_URL}/upload_profile_photo`, {
+        method: 'POST',
+        body: formData
+      });
+      const data = await res.json();
+      setProfile({ ...profile, photo_url: data.url });
+      toast.success('Profile picture uploaded!');
+    } catch (err) {
+      toast.error('Failed to upload photo');
+      console.error(err);
+    }
+  };
 
   return (
-    <div style={{ padding: '2rem' }}>
-      <h1>Edit Profile</h1>
-      <form onSubmit={handleSubmit} style={{ maxWidth: '800px' }}>
-        {/* Personal Information */}
-        <div style={{
-          display: 'flex',
-          flexWrap: 'wrap',
-          gap: '1rem',
-          marginBottom: '2rem'
-        }}>
-          <div style={{ flex: '1 1 200px' }}>
-            <label>Name:</label><br />
-            <input
-              type="text"
-              name="name"
-              value={profile.name}
-              onChange={handleChange}
-            />
-          </div>
+    <div className="p-6 bg-white dark:bg-gray-900 text-black dark:text-white rounded-lg shadow">
+      <Toaster position="top-center" />
+      <h2 className="text-2xl font-bold mb-4">👤 Edit Profile</h2>
 
-          <div style={{ flex: '1 1 200px' }}>
-            <label>Birth Date (MM/DD/YYYY):</label><br />
-            <input
-              type="text"
-              name="birth_date"
-              value={profile.birth_date}
-              onChange={handleChange}
-              placeholder="MM/DD/YYYY"
-            />
-          </div>
+      <div className="space-y-4">
+        <label>Name:</label>
+        <input name="name" value={profile.name} onChange={handleChange} className="w-full p-2 border rounded" />
 
-          <div style={{ flex: '1 1 200px' }}>
-            <label>Gender:</label><br />
-            <select
-              name="gender"
-              value={profile.gender}
-              onChange={handleChange}
-            >
-              <option value="">Select Gender</option>
-              <option value="Female">Female</option>
-              <option value="Male">Male</option>
-              <option value="Non-binary">Non-binary</option>
-              <option value="Prefer not to say">Prefer not to say</option>
-              <option value="Other">Other</option>
-            </select>
-          </div>
+        <label>Birth Date:</label>
+        <input type="date" name="birth_date" value={profile.birth_date} onChange={handleChange} className="w-full p-2 border rounded" />
 
-          <div style={{ flex: '1 1 200px' }}>
-            <label>Goal:</label><br />
-            <select
-              name="goal"
-              value={profile.goal}
-              onChange={handleChange}
-            >
-              <option value="">Select Goal</option>
-              <option value="Weight Loss">Weight Loss</option>
-              <option value="Build Muscle">Build Muscle</option>
-              <option value="Rehab">Rehab</option>
-              <option value="Better Health">Better Health</option>
-              <option value="Prepartum">Prepartum</option>
-              <option value="Postpartum">Postpartum</option>
-              <option value="Other">Other</option>
-            </select>
-          </div>
-        </div>
+        <label>Gender:</label>
+        <select name="gender" value={profile.gender} onChange={handleChange} className="w-full p-2 border rounded">
+          <option value="">Select</option>
+          <option value="female">Female</option>
+          <option value="male">Male</option>
+          <option value="nonbinary">Non-binary</option>
+          <option value="prefer_not_to_say">Prefer not to say</option>
+        </select>
 
-        {/* Theme Mode */}
-        <div style={{ marginBottom: '1rem' }}>
-          <label>Theme Mode:</label><br />
-          <select
-            name="theme"
-            value={profile.theme}
-            onChange={handleChange}
-          >
-            <option value="">Select Theme</option>
-            <option value="Light">Light</option>
-            <option value="Dark">Dark</option>
-            <option value="System">System</option>
-          </select>
-        </div>
+        <label>Goal:</label>
+        <select name="goal" value={profile.goal} onChange={handleChange} className="w-full p-2 border rounded">
+          <option value="">Select Goal</option>
+          <option value="weight_loss">Weight Loss</option>
+          <option value="muscle_gain">Muscle Gain</option>
+          <option value="flexibility">Flexibility</option>
+          <option value="performance">Performance</option>
+        </select>
 
-        {/* Accent Color */}
-        <div style={{ marginBottom: '2rem' }}>
-          <label>Accent Color:</label><br />
-          <div style={{
-            display: 'flex',
-            flexWrap: 'wrap',
-            gap: '0.5rem',
-            marginTop: '0.5rem'
-          }}>
-            {accentColors.map((color) => (
-              <button
-                key={color}
-                type="button"
-                onClick={() => handleAccentColorChange(color)}
-                style={{
-                  backgroundColor: color.toLowerCase().replace(' ', ''),
-                  color: '#fff',
-                  border: profile.accent_color === color ? '3px solid #000' : '1px solid #ccc',
-                  padding: '0.5rem 1rem',
-                  borderRadius: '5px',
-                  cursor: 'pointer'
-                }}
-              >
-                {color}
-              </button>
-            ))}
-          </div>
-        </div>
+        <label>Theme:</label>
+        <select name="theme" value={profile.theme} onChange={handleChange} className="w-full p-2 border rounded">
+          <option value="">System Default</option>
+          <option value="light">Light</option>
+          <option value="dark">Dark</option>
+        </select>
 
-        <button type="submit" disabled={loading}>
-          {loading ? 'Saving...' : 'Save Profile'}
+        <label>Accent Color:</label>
+        <input type="color" name="accent_color" value={profile.accent_color} onChange={handleChange} className="w-16 h-10 p-1 border rounded" />
+
+        <label>Profile Picture:</label>
+        <input type="file" accept="image/*" onChange={handlePhotoUpload} />
+        {profile.photo_url && <img src={profile.photo_url} alt="Profile" className="mt-2 w-24 h-24 rounded-full object-cover" />}
+
+        <button onClick={handleSave} className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition">
+          Save Profile
         </button>
-      </form>
-
-      {message && <p style={{ color: 'green', marginTop: '1rem' }}>{message}</p>}
+      </div>
     </div>
   );
 };
