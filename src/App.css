@@ -20,38 +20,11 @@ body.dark {
   --text-color: #f9f9f9;
 }
 
-import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
-import Dashboard from './pages/Dashboard';
-import Profile from './pages/Profile';
-import WorkoutGenerator from './pages/WorkoutGenerator';
-
-function App() {
-  return (
-    <Router>
-      <nav style={{ padding: '1rem', borderBottom: '1px solid #ccc' }}>
-        <Link to="/" style={{ marginRight: '1rem' }}>Dashboard</Link>
-        <Link to="/profile" style={{ marginRight: '1rem' }}>Profile</Link>
-        {/* Workout Generator link */}
-        <Link to="/workout-generator" style={{ marginRight: '1rem' }}>Workout Generator</Link>
-      </nav>
-
-      <Routes>
-        <Route path="/" element={<Dashboard />} />
-        <Route path="/profile" element={<Profile />} />
-        {/* Workout Generator route */}
-        <Route path="/workout-generator" element={<WorkoutGenerator />} />
-      </Routes>
-    </Router>
-  );
-}
-
-export default App;
-
 #root {
   max-width: 1280px;
   margin: 0 auto;
   padding: 2rem;
-  text-align: center;
+  /* Removed text-align: center to fix grid behavior */
 }
 
 .logo {
@@ -60,9 +33,11 @@ export default App;
   will-change: filter;
   transition: filter 300ms;
 }
+
 .logo:hover {
   filter: drop-shadow(0 0 2em #646cffaa);
 }
+
 .logo.react:hover {
   filter: drop-shadow(0 0 2em #61dafbaa);
 }
@@ -88,4 +63,13 @@ export default App;
 
 .read-the-docs {
   color: #888;
+}
+
+/* ✅ Add this to ensure quadrant backgrounds look correct in light/dark */
+.bg-surface {
+  background-color: #ffffff;
+}
+
+.dark .bg-surface {
+  background-color: #1f2937;
 }
