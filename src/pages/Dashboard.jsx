@@ -5,6 +5,20 @@ const API_URL = import.meta.env.VITE_API_URL;
 
 const Dashboard = () => {
   const [profile, setProfile] = useState(null);
+  const [feedback, setFeedback] = useState({
+    energyLevel: 5,
+    workoutDifficulty: '',
+    comments: ''
+  });
+  const [nutrition, setNutrition] = useState({
+    calories: '',
+    protein: '',
+    carbs: '',
+    fats: '',
+    sugars: '',
+    hydration: ''
+  });
+  const [plan, setPlan] = useState(null);
 
   useEffect(() => {
     fetch(`${API_URL}/get_profile`)
@@ -15,62 +29,152 @@ const Dashboard = () => {
 
   const accentColor = profile?.accent_color || '#228B22';
 
+  // Placeholder Workout Plan → in real use this would come from generator
+  useEffect(() => {
+    // Example plan → you can connect to your generator output later
+    setPlan({
+      days: ['Mon', 'Tues', 'Wed', 'Thurs', 'Fri', 'Sat', 'Sun'],
+      warmup: '5 min light cardio + dynamic stretching',
+      workout: 'Full body circuit x3 rounds',
+      cooldown: '5 min walk + static stretching',
+      caloriesBurned: 450
+    });
+  }, []);
+
+  const handleFeedbackChange = (e) => {
+    setFeedback({ ...feedback, [e.target.name]: e.target.value });
+  };
+
+  const handleNutritionChange = (e) => {
+    setNutrition({ ...nutrition, [e.target.name]: e.target.value });
+  };
+
   return (
     <div className="min-h-screen bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-white p-6 space-y-6">
       {/* Header */}
       <header className="flex justify-between items-center mb-6">
         <h1 className="text-3xl font-bold">🏋️‍♀️ Fitness Dashboard</h1>
         <nav className="space-x-4">
-          <a href="#" className="text-[var(--accent-color)] hover:underline">Dashboard</a>
-          <a href="#" className="text-[var(--accent-color)] hover:underline">Profile</a>
-          <a href="#" className="text-[var(--accent-color)] hover:underline">Workouts</a>
+          <a href="/" className="text-[var(--accent-color)] hover:underline">Dashboard</a>
+          <a href="/profile" className="text-[var(--accent-color)] hover:underline">Profile</a>
+          <a href="/workout-generator" className="text-[var(--accent-color)] hover:underline">Workout Generator</a>
           <a href="#" className="text-[var(--accent-color)] hover:underline">Nutrition</a>
         </nav>
       </header>
 
       {/* 4 Quadrant Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 grid-rows-2 gap-6">
-        
-        {/* Quadrant 1: Profile Info */}
-        <div
-          className="p-4 rounded-lg shadow text-white"
-          style={{ backgroundColor: accentColor }}
-        >
-          <h2 className="text-xl font-semibold mb-2">👤 Profile Information</h2>
+
+        {/* Quadrant 1: Profile */}
+        <div className="p-4 min-h-[300px] rounded-lg shadow bg-surface space-y-4">
+          <h2 className="text-xl font-semibold text-[var(--accent-color)]">👤 Profile</h2>
           {profile ? (
-            <ul className="space-y-1 text-sm">
-              <li><strong>Name:</strong> {profile.name}</li>
-              <li><strong>Goal:</strong> {profile.goal}</li>
-              <li><strong>Birth Date:</strong> {profile.birth_date}</li>
-              <li><strong>Gender:</strong> {profile.gender}</li>
-              <li><strong>Theme:</strong> {profile.theme}</li>
-              <li><strong>Accent:</strong> {profile.accent_color}</li>
-              {profile.photo_url && (
-                <img src={profile.photo_url} alt="Profile" className="mt-2 w-16 h-16 rounded-full object-cover border-2 border-white" />
-              )}
-            </ul>
+            <>
+              {/* Line 1 */}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
+                <div><strong>Name:</strong> {profile.name}</div>
+                <div><strong>Gender:</strong> {profile.gender}</div>
+                <div><strong>Birthday:</strong> {profile.birth_date}</div>
+              </div>
+              {/* Line 2 */}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
+                <div><strong>Goal:</strong> {profile.goal}</div>
+                <div><strong>Accent Color:</strong> {profile.accent_color}</div>
+                <div><strong>Theme:</strong> {profile.theme}</div>
+              </div>
+              {/* Line 3 */}
+              <div>
+                <strong>Profile Picture:</strong><br />
+                {profile.photo_url ? (
+                  <img src={profile.photo_url} alt="Profile" className="mt-2 w-24 h-24 rounded-full object-cover" />
+                ) : 'No picture uploaded.'}
+              </div>
+            </>
           ) : (
             <p>Loading profile...</p>
           )}
         </div>
 
-        {/* Quadrant 2: Feedback / Daily Journal */}
-        <div className="p-4 rounded-lg shadow border-2" style={{ borderColor: accentColor }}>
-          <h2 className="text-xl font-semibold mb-2 text-[var(--accent-color)]">📝 Feedback / Daily Journal</h2>
-          <p className="text-sm text-gray-600 dark:text-gray-300">Coming soon: hydration, recovery, and energy tracking.</p>
+        {/* Quadrant 2: Feedback / Journal */}
+        <div className="p-4 min-h-[300px] rounded-lg shadow bg-surface space-y-4">
+          <h2 className="text-xl font-semibold text-[var(--accent-color)]">📝 Feedback / Journal</h2>
+          <div>
+            <label>Energy Level: {feedback.energyLevel}</label>
+            <input
+              type="range"
+              min="1"
+              max="10"
+              name="energyLevel"
+              value={feedback.energyLevel}
+              onChange={handleFeedbackChange}
+              className="w-full"
+            />
+          </div>
+          <div>
+            <label>Today’s Workout:</label>
+            <select
+              name="workoutDifficulty"
+              value={feedback.workoutDifficulty}
+              onChange={handleFeedbackChange}
+              className="w-full p-2 border rounded"
+              style={{ borderColor: 'var(--accent-color)', color: 'var(--accent-color)' }}
+            >
+              <option value="">Select</option>
+              <option value="too_easy">Too Easy</option>
+              <option value="just_right">Just Right</option>
+              <option value="too_hard">Too Hard</option>
+            </select>
+          </div>
+          <div>
+            <label>Comments:</label>
+            <textarea
+              name="comments"
+              value={feedback.comments}
+              onChange={handleFeedbackChange}
+              className="w-full p-2 border rounded"
+              rows="3"
+            />
+          </div>
         </div>
 
         {/* Quadrant 3: Workout Plan */}
-        <div className="p-4 rounded-lg shadow border-2" style={{ borderColor: accentColor }}>
-          <h2 className="text-xl font-semibold mb-2 text-[var(--accent-color)]">🏋️‍♂️ Workout Plan</h2>
-          <WorkoutGenerator />
+        <div className="p-4 min-h-[300px] rounded-lg shadow bg-surface space-y-2">
+          <h2 className="text-xl font-semibold text-[var(--accent-color)]">🏋️‍♂️ Workout Plan</h2>
+          {plan ? (
+            <>
+              <div className="flex flex-wrap gap-2 mb-2">
+                {plan.days.map((day) => (
+                  <div key={day} className="px-2 py-1 bg-[var(--accent-color)] text-white rounded">{day}</div>
+                ))}
+              </div>
+              <div><strong>Warm Up:</strong> {plan.warmup}</div>
+              <div><strong>Workout:</strong> {plan.workout}</div>
+              <div><strong>Cooldown:</strong> {plan.cooldown}</div>
+              <div><strong>Total Calories Burned:</strong> {plan.caloriesBurned}</div>
+            </>
+          ) : (
+            <p>No workout plan yet. Generate a plan to see it here!</p>
+          )}
         </div>
 
-        {/* Quadrant 4: Nutrition */}
-        <div className="p-4 rounded-lg shadow border-2" style={{ borderColor: accentColor }}>
-          <h2 className="text-xl font-semibold mb-2 text-[var(--accent-color)]">🥗 Nutrition</h2>
-          <p className="text-sm text-gray-600 dark:text-gray-300">Coming soon: meal planner, recipes, and nutrition tracking.</p>
+        {/* Quadrant 4: Nutrition Tracking */}
+        <div className="p-4 min-h-[300px] rounded-lg shadow bg-surface space-y-2">
+          <h2 className="text-xl font-semibold text-[var(--accent-color)]">🥗 Nutrition Tracking</h2>
+          {['calories','protein','carbs','fats','sugars','hydration'].map((field) => (
+            <div key={field}>
+              <label className="capitalize">{field}:</label>
+              <input
+                type="text"
+                name={field}
+                value={nutrition[field]}
+                onChange={handleNutritionChange}
+                className="w-full p-2 border rounded"
+                style={{ borderColor: 'var(--accent-color)', color: 'var(--accent-color)' }}
+              />
+            </div>
+          ))}
         </div>
+
       </div>
     </div>
   );
