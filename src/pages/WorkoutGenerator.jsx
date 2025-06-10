@@ -1,8 +1,11 @@
 import React, { useState } from 'react';
+import { useTheme } from '../contexts/theme-context';
 
 const API_URL = import.meta.env.VITE_API_URL;
 
 const WorkoutGenerator = () => {
+  const { accentColor } = useTheme();
+
   const [goal, setGoal] = useState('');
   const [energyLevel, setEnergyLevel] = useState(5);
   const [daysPerWeek, setDaysPerWeek] = useState(5);
@@ -52,6 +55,7 @@ const WorkoutGenerator = () => {
               value={goal}
               onChange={e => setGoal(e.target.value)}
               className="w-full p-2 border rounded"
+              style={{ borderColor: 'var(--accent-color)', color: 'var(--accent-color)' }}
             />
           </div>
           <div>
@@ -61,6 +65,7 @@ const WorkoutGenerator = () => {
               value={fitnessLevel}
               onChange={e => setFitnessLevel(e.target.value)}
               className="w-full p-2 border rounded"
+              style={{ borderColor: 'var(--accent-color)', color: 'var(--accent-color)' }}
             />
           </div>
           <div>
@@ -83,6 +88,7 @@ const WorkoutGenerator = () => {
               value={daysPerWeek}
               onChange={e => setDaysPerWeek(e.target.value)}
               className="w-full p-2 border rounded"
+              style={{ borderColor: 'var(--accent-color)', color: 'var(--accent-color)' }}
             />
           </div>
           <div className="sm:col-span-2">
@@ -92,6 +98,7 @@ const WorkoutGenerator = () => {
               value={equipment}
               onChange={e => setEquipment(e.target.value)}
               className="w-full p-2 border rounded"
+              style={{ borderColor: 'var(--accent-color)', color: 'var(--accent-color)' }}
             />
           </div>
           <div className="sm:col-span-2">
@@ -101,6 +108,7 @@ const WorkoutGenerator = () => {
               value={injuries}
               onChange={e => setInjuries(e.target.value)}
               className="w-full p-2 border rounded"
+              style={{ borderColor: 'var(--accent-color)', color: 'var(--accent-color)' }}
             />
           </div>
         </div>
@@ -116,7 +124,7 @@ const WorkoutGenerator = () => {
         {plan && (
           <div className="mt-6 space-y-2">
             <h2 className="text-xl font-semibold text-[var(--accent-color)]">📅 Your Plan</h2>
-            <pre className="bg-gray-200 dark:bg-gray-800 p-4 rounded whitespace-pre-wrap">
+            <pre className="bg-gray-200 dark:bg-gray-800 p-4 rounded whitespace-pre-wrap overflow-x-auto">
               {JSON.stringify(plan, null, 2)}
             </pre>
           </div>

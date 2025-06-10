@@ -1,8 +1,13 @@
 import React, { useEffect, useState } from 'react';
+import { useTheme } from '../contexts/theme-context';
+import ThemeSelector from '../components/theme-selector';
 
 const API_URL = import.meta.env.VITE_API_URL;
 
 const Dashboard = () => {
+  const { accentColor } = useTheme();
+  const [showThemeSelector, setShowThemeSelector] = useState(false);
+
   const [profile, setProfile] = useState(null);
   const [feedback, setFeedback] = useState({
     energyLevel: 5,
@@ -25,8 +30,6 @@ const Dashboard = () => {
       .then(data => setProfile(data))
       .catch(err => console.error('Error fetching profile:', err));
   }, []);
-
-  const accentColor = profile?.accent_color || '#228B22';
 
   useEffect(() => {
     setPlan({
@@ -169,6 +172,19 @@ const Dashboard = () => {
           ))}
         </div>
       </div>
+
+      {/* Floating Theme Selector Button */}
+      <button
+        onClick={() => setShowThemeSelector(true)}
+        className="fixed bottom-6 right-6 px-4 py-2 bg-[var(--accent-color)] text-white rounded-full shadow-lg hover:opacity-90 transition z-50"
+      >
+        🎨
+      </button>
+
+      {/* ThemeSelector Modal */}
+      {showThemeSelector && (
+        <ThemeSelector onClose={() => setShowThemeSelector(false)} />
+      )}
     </div>
   );
 };
