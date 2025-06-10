@@ -2,6 +2,11 @@
   --accent-color: #228B22; /* default fallback */
   --background-color: #f9f9f9;
   --text-color: #111111;
+
+  /* Added from old deploy */
+  --card: #ffffff;
+  --card-foreground: #111111;
+  --border: #e5e7eb;
 }
 
 body {
@@ -13,11 +18,21 @@ body {
 body.light {
   --background-color: #f9f9f9;
   --text-color: #111111;
+
+  /* Added for light mode */
+  --card: #ffffff;
+  --card-foreground: #111111;
+  --border: #e5e7eb;
 }
 
 body.dark {
   --background-color: #111111;
   --text-color: #f9f9f9;
+
+  /* Added for dark mode */
+  --card: #1f2937;
+  --card-foreground: #f9f9f9;
+  --border: #374151;
 }
 
 #root {
@@ -65,11 +80,37 @@ body.dark {
   color: #888;
 }
 
-/* ✅ Add this to ensure quadrant backgrounds look correct in light/dark */
+/* ✅ Ensure quadrant backgrounds look correct in light/dark */
 .bg-surface {
   background-color: #ffffff;
 }
 
 .dark .bg-surface {
   background-color: #1f2937;
+}
+
+/* ✅ Quadrant Grid + Styling */
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: auto auto;
+  gap: 1rem;
+  padding: 1rem;
+}
+
+.dashboard-quadrant {
+  border: 2px solid var(--border);
+  border-radius: 10px;
+  padding: 1rem;
+  background-color: var(--card);
+  color: var(--card-foreground);
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  transition: all 0.3s ease;
+}
+
+@media (max-width: 768px) {
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto;
+  }
 }

@@ -1,11 +1,8 @@
 import React, { useState } from 'react';
-import { useTheme } from '../contexts/theme-context';
 
 const API_URL = import.meta.env.VITE_API_URL;
 
 const WorkoutGenerator = () => {
-  const { accentColor } = useTheme();
-
   const [goal, setGoal] = useState('');
   const [energyLevel, setEnergyLevel] = useState(5);
   const [daysPerWeek, setDaysPerWeek] = useState(5);
@@ -31,100 +28,97 @@ const WorkoutGenerator = () => {
         injuries
       })
     })
-      .then(res => res.json())
-      .then(data => {
+      .then((res) => res.json())
+      .then((data) => {
         setPlan(data);
         setLoading(false);
       })
-      .catch(err => {
-        console.error('Error generating plan:', err);
+      .catch((err) => {
+        console.error(err);
         setLoading(false);
       });
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-white py-8 px-4">
-      <div className="max-w-screen-md mx-auto p-6 rounded-lg shadow bg-surface space-y-6">
-        <h1 className="text-2xl font-bold text-[var(--accent-color)]">💪 Generate Your Workout Plan</h1>
+    <div className="dashboard-quadrant">
+      <h2 className="text-xl font-semibold mb-2">🏋️ Workout Generator</h2>
+      <div className="space-y-2">
+        <div>
+          <label>Goal:</label>
+          <input
+            type="text"
+            value={goal}
+            onChange={(e) => setGoal(e.target.value)}
+            className="w-full p-2 border rounded"
+          />
+        </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <div>
-            <label>Goal:</label>
-            <input
-              type="text"
-              value={goal}
-              onChange={e => setGoal(e.target.value)}
-              className="w-full p-2 border rounded"
-              style={{ borderColor: 'var(--accent-color)', color: 'var(--accent-color)' }}
-            />
-          </div>
-          <div>
-            <label>Fitness Level:</label>
-            <input
-              type="text"
-              value={fitnessLevel}
-              onChange={e => setFitnessLevel(e.target.value)}
-              className="w-full p-2 border rounded"
-              style={{ borderColor: 'var(--accent-color)', color: 'var(--accent-color)' }}
-            />
-          </div>
-          <div>
-            <label>Energy Level: {energyLevel}</label>
-            <input
-              type="range"
-              min="1"
-              max="10"
-              value={energyLevel}
-              onChange={e => setEnergyLevel(e.target.value)}
-              className="w-full"
-            />
-          </div>
-          <div>
-            <label>Days per Week:</label>
-            <input
-              type="number"
-              min="1"
-              max="7"
-              value={daysPerWeek}
-              onChange={e => setDaysPerWeek(e.target.value)}
-              className="w-full p-2 border rounded"
-              style={{ borderColor: 'var(--accent-color)', color: 'var(--accent-color)' }}
-            />
-          </div>
-          <div className="sm:col-span-2">
-            <label>Available Equipment:</label>
-            <input
-              type="text"
-              value={equipment}
-              onChange={e => setEquipment(e.target.value)}
-              className="w-full p-2 border rounded"
-              style={{ borderColor: 'var(--accent-color)', color: 'var(--accent-color)' }}
-            />
-          </div>
-          <div className="sm:col-span-2">
-            <label>Injuries / Restrictions:</label>
-            <input
-              type="text"
-              value={injuries}
-              onChange={e => setInjuries(e.target.value)}
-              className="w-full p-2 border rounded"
-              style={{ borderColor: 'var(--accent-color)', color: 'var(--accent-color)' }}
-            />
-          </div>
+        <div>
+          <label>Energy Level: {energyLevel}</label>
+          <input
+            type="range"
+            min="1"
+            max="10"
+            value={energyLevel}
+            onChange={(e) => setEnergyLevel(parseInt(e.target.value))}
+            className="w-full"
+          />
+        </div>
+
+        <div>
+          <label>Days per Week:</label>
+          <input
+            type="number"
+            min="1"
+            max="7"
+            value={daysPerWeek}
+            onChange={(e) => setDaysPerWeek(parseInt(e.target.value))}
+            className="w-full p-2 border rounded"
+          />
+        </div>
+
+        <div>
+          <label>Equipment:</label>
+          <input
+            type="text"
+            value={equipment}
+            onChange={(e) => setEquipment(e.target.value)}
+            className="w-full p-2 border rounded"
+          />
+        </div>
+
+        <div>
+          <label>Fitness Level:</label>
+          <input
+            type="text"
+            value={fitnessLevel}
+            onChange={(e) => setFitnessLevel(e.target.value)}
+            className="w-full p-2 border rounded"
+          />
+        </div>
+
+        <div>
+          <label>Injuries/Restrictions:</label>
+          <input
+            type="text"
+            value={injuries}
+            onChange={(e) => setInjuries(e.target.value)}
+            className="w-full p-2 border rounded"
+          />
         </div>
 
         <button
           onClick={handleGeneratePlan}
+          className="mt-2 px-4 py-2 bg-[var(--accent-color)] text-white rounded hover:opacity-90 transition"
           disabled={loading}
-          className="w-full bg-[var(--accent-color)] text-white font-semibold py-2 px-4 rounded hover:opacity-90 transition"
         >
-          {loading ? 'Generating Plan...' : 'Generate Plan'}
+          {loading ? 'Generating...' : 'Generate Plan'}
         </button>
 
         {plan && (
-          <div className="mt-6 space-y-2">
-            <h2 className="text-xl font-semibold text-[var(--accent-color)]">📅 Your Plan</h2>
-            <pre className="bg-gray-200 dark:bg-gray-800 p-4 rounded whitespace-pre-wrap overflow-x-auto">
+          <div className="mt-4">
+            <h3 className="font-semibold mb-2">Generated Plan:</h3>
+            <pre className="p-2 bg-surface rounded text-sm overflow-x-auto">
               {JSON.stringify(plan, null, 2)}
             </pre>
           </div>
